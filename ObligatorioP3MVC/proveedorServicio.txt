@@ -1,0 +1,5 @@
+210000123400#Carniceria Carnasa#carne@carnasa.com#24090021#Vip | Asado del Pepe:Los mejores cortes de carne:img\asadoDelPepe.jpg:Aprovisionamiento#La vaca y el pollito:Los mejores pollos y cortes de carne:img\lavacayelpollito.jpg:Aprovisionamiento
+210000123401#DecorArte#deco@arte.com#24092026#noVip | Decora2:Servicio de decoracion:img\decora2.jpg:Decoracion
+210000123402#Animadon#anima@payaso.com#24092087#noVip | Animate!:Servicio de animadores para chicos y grandes:img\animate.jpg:Animacion#Fotasas:Las mejores fotos:img\fotasas.jpg:Fotografia#Payasada:Servicio de payasos:img\payaso.jpg:Animacion#Reboton:Servicio de cama elastica y castillo inflable:img\reboton.jpg:Animacion
+210000123403#Comida Express#morfi@rapido.com#24098745#Vip | Alto Chivo:El mejor chivito:img\chivito.jpg:Catering#Pizzas XXL:Servicio de pizzas gigantes:img\pizza.jpg:Catering#Que burguer:Deliciosas hamburguesas:img\queburguer.jpg:Catering
+210000123477#La comilona#lacomi@lona.com#24090000#noVip | El Gloton:Mucha comida:img\elGloton.jpg:Catering#EL Lunch:Para chuparse los dedos:img\lunch.jpg:Catering#Picadinha:Los mejores productos para tu picada:img\picadinha.jpg:Catering

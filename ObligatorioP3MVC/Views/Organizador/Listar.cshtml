@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ObligatorioP3MVC.Models.Organizador>
+
+
+@{
+    ViewBag.Title = "Listado de Organizadores";
+}
+
+<h2>Listado de Organizadores</h2>
+
+<p>
+    @Html.ActionLink("Crear un nuevo Organizador", "Crear")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NombreOrganizador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreOrganizador)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefono)
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div>
+    @Html.ActionLink("Volver al menú principal", "Index", "Home")
+</div>

@@ -1,0 +1,40 @@
+﻿@model ObligatorioP3MVC.Models.Organizador
+
+@{
+    ViewBag.Title = "Datos";
+}
+
+<h2>Datos</h2>
+
+<div>
+    <h4>Organizador</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreOrganizador)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreOrganizador)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Volver al menú principal", "Index", "Home")
+</p>
