@@ -15,7 +15,9 @@ namespace ObligatorioP3MVC.Models
         [Key]
         [Column(Order =1)]
         public string Nombre { get; set; }
+        [Required(ErrorMessage ="Debe seleccionar una fecha.")]
         public DateTime Fecha { get; set; }
+        [Required(ErrorMessage ="Debe ingresar una dirección.")]
         public string Direccion { get; set; }
         public virtual Organizador Organizador { get; set; }
         public TipoEvento TipoEvento { get; set; }

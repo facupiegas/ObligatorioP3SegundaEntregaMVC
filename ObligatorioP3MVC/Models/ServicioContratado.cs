@@ -25,8 +25,6 @@ namespace ObligatorioP3MVC.Models
         public virtual Servicio Servicio { get; set; }
         public bool yaCalificado { get; set; }
 
-
-        //public virtual List<Servicio> ListaServicios { get; set; }
         #endregion
 
         #region Metodos
