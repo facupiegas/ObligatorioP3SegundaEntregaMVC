@@ -14,6 +14,7 @@ namespace ObligatorioP3MVC.Models
         #region Atributos y Properties
         [Key]
         [Column(Order =1)]
+        [Display(Name ="Nombre Evento")]
         public string Nombre { get; set; }
         [Required(ErrorMessage ="Debe seleccionar una fecha.")]
         public DateTime Fecha { get; set; }

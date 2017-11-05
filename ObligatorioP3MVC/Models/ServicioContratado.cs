@@ -22,6 +22,9 @@ namespace ObligatorioP3MVC.Models
         [Key]
         [Column(Order = 3)]
         public string NombreServicio { get; set; }
+        [Key]
+        [Column(Order = 4)]
+        public string NombreEvento { get; set; }
         public virtual Servicio Servicio { get; set; }
         public bool yaCalificado { get; set; }
 
