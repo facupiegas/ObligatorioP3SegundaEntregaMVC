@@ -17,6 +17,8 @@ namespace ObligatorioP3MVC.Models
         [Key]
         [Column(Order = 2)]
         public string NombreEvento { get; set; }
+        [Required(ErrorMessage ="Debe ingresar una calificacion(entre 1 y 5)")]
+        [Range(1,5)]
         public int Calificacion { get; set; }
         public string Comentario { get; set; }
         
