@@ -23,6 +23,27 @@ namespace ObligatorioP3MVC.Controllers
             return View();
         }
 
+        public ActionResult ListadoMejorCalificados()
+        {
+            List<Proveedor> listaProveedores = new List<Proveedor>();
+            GestionEventosContext db = new GestionEventosContext();
+            listaProveedores = db.Proveedores.GroupBy(p => p.CalificacionGeneral)
+                      .OrderByDescending(grupo => grupo.Key)
+                      .First().ToList();
+
+            return View(listaProveedores);
+        }
+
+        public ActionResult ListadoMasElegidos()
+        {
+            List<Proveedor> listaProveedores = new List<Proveedor>();
+            GestionEventosContext db = new GestionEventosContext();
+            listaProveedores = db.Proveedores.GroupBy(p => p.CantVecesElegido)
+                      .OrderByDescending(grupo => grupo.Key)
+                      .First().ToList();
+            return View(listaProveedores);
+        }
+
         //esta accion solo puede ser utilizada por el organizador logueado 
         public ActionResult CalificarProveedor(string nombreEvento = "")
         {

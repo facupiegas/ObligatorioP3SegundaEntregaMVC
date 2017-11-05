@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ObligatorioP3MVC.Models.Proveedor>
+
+@{
+    ViewBag.Title = "Listado Mejor Calificados";
+}
+
+<h2>Proveedores Mejor Calificados</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Rut)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NomFantasia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vip)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CalificacionGeneral)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CantVecesElegido)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Rut)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NomFantasia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Telefono)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vip)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CalificacionGeneral)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CantVecesElegido)
+        </td>
+    </tr>
+}
+
+</table>
+
+
+<div>
+    @Html.ActionLink("Volver al menu principal", "Index", "Home")
+</div>
