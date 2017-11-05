@@ -13,7 +13,7 @@ namespace ObligatorioP3MVC.Models
     {
         #region Atributos y Properties
         [Key]
-        [Display(Name ="Nombre")]
+        [Display(Name ="Nombre Organizador")]
         [Required(ErrorMessage ="Debe ingresar un Nombre")]
         public string NombreOrganizador { get; set; }
         [Required(ErrorMessage = "Debe ingresar un Email")]

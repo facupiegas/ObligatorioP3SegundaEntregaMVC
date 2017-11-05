@@ -13,6 +13,7 @@ namespace ObligatorioP3MVC.Models
     {
         #region Atributos y Properties
         [Key]
+        [Display(Name ="Tipo Evento")]
         public string NombreTipoEvento { get; set; }
 
         public virtual List<TipoServicio> TiposServicios { get; set; }

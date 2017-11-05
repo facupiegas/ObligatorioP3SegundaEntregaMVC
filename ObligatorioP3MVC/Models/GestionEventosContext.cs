@@ -18,6 +18,7 @@ namespace ObligatorioP3MVC.Models
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<CalificacionProveedor> CalificacionProveedores { get; set; }
+        public DbSet<ServicioContratado> ServicioContratados { get; set; }
 
         public GestionEventosContext():base(@"Server =.\; DataBase = ObligatorioP3MVC; User Id = sa; Password = Admin1234!; MultipleActiveResultSets = true;"){ }
 
