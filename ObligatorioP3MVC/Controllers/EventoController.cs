@@ -16,85 +16,108 @@ namespace ObligatorioP3MVC.Controllers
             ViewBag.Error = mensaje;
             return View();
         }
-
-        [HttpGet]
-        //esta accion solo puede ser utilizada por el organizador logueado 
-        public ActionResult CalificarProveedor(string nombreEvento)
+        public ActionResult Exito(string mensaje)
         {
+            if (mensaje == null || mensaje == "") mensaje = "No hay detalle para mostrar";
+            ViewBag.Mensaje = mensaje;
+            return View();
+        }
 
-            CalificarProveedorViewModel vm = new CalificarProveedorViewModel(); 
-            
+        //esta accion solo puede ser utilizada por el organizador logueado 
+        public ActionResult CalificarProveedor(string nombreEvento = "")
+        {
+            CalificarProveedorViewModel vm = new CalificarProveedorViewModel();
             using (GestionEventosContext db = new GestionEventosContext())
             {
                 vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Realizado).ToList();
-                if (nombreEvento != null || nombreEvento != "")
+                if (nombreEvento != "")
                 {
+                    ViewBag.NombreEvento = nombreEvento;
                     vm.ServiciosContratados = db.ServicioContratados.Where(p => p.NombreEvento == nombreEvento).ToList();
+                }
+                else
+                {
+                    ViewBag.NombreEvento = null;
                 }
             }
             return View(vm);
         }
-        
-
-        public static bool CalificarProveedor(Evento unEvento, string unRut, int unPuntaje, string unComentario)
+        [HttpGet]
+        public ActionResult CrearCalificacion(string rut,string nombreEvento,DateTime fecha,string nombreServicio)
         {
-            bool retorno = false;
-            //compruebo que el valor del puntaje este dentro del rango
-            if (unPuntaje > 0 && unPuntaje <= 5) //////ESTA LINEA PROBABLEMENTE SE SUPLANTA POR UNA ANNOTATION EN LA CLASE
-            {
-                using (var db = new GestionEventosContext())
-                {
-                    //busco el evento en la bd
-                    unEvento = db.Eventos.Find(unEvento.Nombre);
-                    //si encuentro el evento, la fecha es menor a la actual y el evento fue realizado
-                    if (unEvento != null && unEvento.Fecha < DateTime.Now && unEvento.Realizado)
-                    {
-                        //busco el Proveedor con el rut ingresado
-                        Proveedor tmpProv = db.Proveedores.Find(unRut);
-                        if (tmpProv != null)
-                        {
-                            bool okParaCalificar = true;
-                            //verifico que el proveedor no haya sido previamente calificado para este evento
-                            foreach (ServicioContratado tmpContratado in unEvento.ServiciosContratados)
-                            {
-                                if (tmpContratado.Rut == unRut && tmpContratado.yaCalificado)
-                                {
-                                    okParaCalificar = false;
-                                }
-                            }
-                            if (okParaCalificar)
-                            {
-                                //Si no fue ingresado ningun comenario lo seteo en null
-                                if (unComentario == "")
-                                {
-                                    unComentario = null;
-                                }
-                                CalificacionProveedor calificacion = new CalificacionProveedor() { Rut = unRut, NombreEvento = unEvento.Nombre, Calificacion = unPuntaje, Comentario = unComentario };
-                                tmpProv.Calificaciones.Add(calificacion);
-                                //Marco al proveedor como ya calificado para este evento
-                                foreach (ServicioContratado tmpContratado in unEvento.ServiciosContratados)
-                                {
-                                    if (tmpContratado.Rut == unRut)
-                                    {
-                                        tmpContratado.yaCalificado = true;
-                                    }
-                                }
-                                try
-                                {
-                                    db.SaveChanges();
-                                    retorno = true;
+            ViewBag.Rut = rut;
+            ViewBag.NombreServicio = nombreServicio;
+            ViewBag.NombreEvento = nombreEvento;
 
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine(ex.Message);
-                                }
-                            }
+            CalificacionProveedor calificacionProveedor = new CalificacionProveedor()
+            {
+                Rut = rut,
+                NombreEvento = nombreEvento
+            };
+            ServicioContratado servicioContratado = new ServicioContratado()
+            {
+                Rut = rut,
+                NombreEvento=nombreEvento,
+                NombreServicio = nombreServicio,
+                Fecha = fecha
+            };
+            CrearCalificacionViewModel vm = new CrearCalificacionViewModel();
+            vm.CalificacionProveedor = calificacionProveedor;
+            vm.ServicioContratado = servicioContratado;
+            Session["CrearCalificacion"] = vm;
+            return View(vm);
+        }
+        [HttpPost]
+        public ActionResult CrearCalificacion(CrearCalificacionViewModel vm)
+        {
+            var parametroDeAccion = (Object)null;
+            string accion = string.Empty;
+            CrearCalificacionViewModel aux = (CrearCalificacionViewModel)Session["CrearCalificacion"];
+            aux.CalificacionProveedor.Calificacion = vm.CalificacionProveedor.Calificacion;
+            aux.CalificacionProveedor.Comentario = vm.CalificacionProveedor.Comentario;
+            vm = aux;
+            if (ModelState.IsValid)
+            {
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+                    Proveedor tmpProv = db.Proveedores.Find(vm.CalificacionProveedor.Rut);
+                    if (tmpProv != null)
+                    {
+                        if (vm.CalificacionProveedor.Comentario == null || vm.CalificacionProveedor.Comentario == "")
+                        {
+                            vm.CalificacionProveedor.Comentario = "No fue ingresado ningun comentario";
                         }
+                        tmpProv.Calificaciones.Add(vm.CalificacionProveedor);    
+                        ServicioContratado auxServContratado = db.ServicioContratados.Find(vm.ServicioContratado.Fecha,tmpProv.Rut,vm.ServicioContratado.NombreServicio,vm.CalificacionProveedor.NombreEvento);
+                        auxServContratado.yaCalificado = true;
+                        try
+                        {
+                            db.SaveChanges();
+                            
+                            accion = "Exito";
+                            parametroDeAccion = new { mensaje = "Su comentario fue ingresado con exito!. Muchas gracias" };
+                        }
+                        catch
+                        {
+                            accion = "Error";
+                            parametroDeAccion = new { mensaje = "Su comentario no pudo ser ingresado. Por favor verifique los datos ingresados e intentelo nuevamente." };
+                        }
+
+                    }
+                    else
+                    {
+                        accion = "Error";
+                        parametroDeAccion = new { mensaje = "Por favor verifique los datos ingresados e intentelo nuevamente." };
                     }
                 }
             }
-            return retorno;
+            else
+            {
+                accion = "Error";
+                parametroDeAccion = new { mensaje = "Por favor verifique los datos ingresados e intentelo nuevamente." };
+            }
+
+            return RedirectToAction(accion,parametroDeAccion);
         }
 
     }
