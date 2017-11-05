@@ -1,27 +1,82 @@
-﻿@model IEnumerable<ObligatorioP3MVC.ViewModels.CalificarProveedorViewModel>
+﻿@model ObligatorioP3MVC.ViewModels.CalificarProveedorViewModel
 
 @{
     ViewBag.Title = "CalificarProveedor";
 }
 
-<h2>CalificarProveedor</h2>
+<h2>Calificar Proveedor</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<h4>Eventos Realizados</h4>
 <table class="table">
     <tr>
-        <th></th>
+        <th>Nombre Evento</th>
+        <th>Fecha</th>
+        <th>Direccion</th>
+        <th>Nombre Organizador</th>
+        <th>Tipo Evento</th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
+@foreach (var item in Model.Eventos) {
+    string selectedRow = "";
+    if (item.Nombre == ViewBag.NombreEvento)
+    {
+        selectedRow = "success";
+    }
+    <tr class="@selectedRow">
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Direccion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Organizador.NombreOrganizador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoEvento.NombreTipoEvento)
+        </td>
+        <td>
+            @Html.ActionLink("Seleccionar", "CalificarProveedor", new { nombreEvento=item.Nombre })
         </td>
     </tr>
 }
 
 </table>
+
+
+@if (ViewBag.NombreEvento !=null) {
+
+<h4>Servicios Contratados para el Evento(aun no calificados)</h4>
+<table class="table">
+    <tr>
+        <th>Rut Proveedor</th>
+        <th>Nombre Servicio</th>
+    </tr>
+    @foreach (var item in Model.ServiciosContratados)
+    {
+        if (!item.yaCalificado)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rut)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreServicio)
+            </td>
+            <td>
+                @Html.ActionLink("Calificar", "CrearCalificacion", new { rut = item.Rut,nombreEvento=item.NombreEvento,fecha=item.Fecha,nombreServicio=item.NombreServicio })
+            </td>
+        </tr>
+            }
+        }
+
+</table>
+}
+
+
+<div>
+    @Html.ActionLink("Volver al menú principal", "Index", "Home")
+</div>
