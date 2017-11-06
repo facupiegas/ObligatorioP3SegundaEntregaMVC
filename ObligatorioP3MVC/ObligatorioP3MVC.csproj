@@ -192,6 +192,7 @@
     <Content Include="Views\Evento\CrearCalificacion.cshtml" />
     <Content Include="Views\Evento\ListadoMejorCalificados.cshtml" />
     <Content Include="Views\Evento\ListadoMasElegidos.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
