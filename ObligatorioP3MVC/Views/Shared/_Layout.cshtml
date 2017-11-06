@@ -18,7 +18,8 @@
                 </button>
                 @Html.ActionLink("Obligatorio P3", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
+            
+            @*<div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Crear Organizador", "Crear", "Organizador")</li>
@@ -28,13 +29,20 @@
                     <li>@Html.ActionLink("Proveedores Mas Elegidos", "ListadoMasElegidos", "Evento")</li>
                     <li>@Html.ActionLink("Proveedores Mejor Calificados", "ListadoMejorCalificados", "Evento")</li>
                 </ul>
-            </div>
+            </div>*@
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
+            <div style="width: auto; background-color: #ffffff; font-size: large">
+                @if (Request.IsAuthenticated)
+                {
+                    <strong>@Html.Encode(User.Identity.Name)</strong>
+                    @Html.ActionLink("Sign Out", "Logout", "Home")
+                }
+            </div>
             <p>&copy; @DateTime.Now.Year - Obligatorio P3</p>
         </footer>
     </div>

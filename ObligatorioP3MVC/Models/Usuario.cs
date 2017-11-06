@@ -54,6 +54,8 @@ namespace ObligatorioP3MVC.Models
         {
             return this.Rol;
         }
+
+
         #endregion
     }
 }
