@@ -36,7 +36,7 @@ namespace ObligatorioP3MVC.Controllers
                     {
                         if (db.Usuarios.Find(org.Email) == null)
                         {
-                            Usuario tmpUser = new Usuario() { Nombre = org.Email, Pass = org.Usuario.Pass, Rol = Usuario.EnumRol.Organizador };
+                            Usuario tmpUser = new Usuario(org.Email, org.Usuario.Pass, Usuario.EnumRol.Organizador);
                             org.Usuario = tmpUser;
                             db.Organizadores.Add(org);
                             db.SaveChanges();
@@ -116,6 +116,15 @@ namespace ObligatorioP3MVC.Controllers
                 lista = db.Organizadores.ToList();
             }
             return View(lista);
+        }
+
+        public bool esAdmin()
+        {
+            return Session["TipoDeUsuario"].ToString() == "Administrador" ? true : false;
+        }
+        public bool esOrganizador()
+        {
+            return Session["TipoDeUsuario"].ToString() == "Organizador" ? true : false;
         }
     }
 }

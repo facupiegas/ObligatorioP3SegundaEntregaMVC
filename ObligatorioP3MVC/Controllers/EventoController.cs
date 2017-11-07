@@ -141,5 +141,14 @@ namespace ObligatorioP3MVC.Controllers
             return RedirectToAction(accion,parametroDeAccion);
         }
 
+        public bool esAdmin()
+        {
+            return Session["TipoDeUsuario"].ToString() == "Administrador" ? true : false;
+        }
+        public bool esOrganizador()
+        {
+            return Session["TipoDeUsuario"].ToString() == "Organizador" ? true : false;
+        }
+
     }
 }

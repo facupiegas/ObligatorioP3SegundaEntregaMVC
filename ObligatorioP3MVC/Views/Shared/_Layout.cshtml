@@ -37,9 +37,9 @@
         <hr />
         <footer>
             <div style="width: auto; background-color: #ffffff; font-size: large">
-                @if (Request.IsAuthenticated)
+                @if (Session["UsuarioLogueado"] != null  && Session["UsuarioLogueado"].ToString() != "")
                 {
-                    <strong>@Html.Encode(User.Identity.Name)</strong>
+                    <strong>@Html.Encode(Session["UsuarioLogueado"].ToString())</strong>
                     @Html.ActionLink("Sign Out", "Logout", "Home")
                 }
             </div>
