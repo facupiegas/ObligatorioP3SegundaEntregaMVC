@@ -11,9 +11,11 @@ namespace ObligatorioP3MVC.Controllers
     public class HomeController : Controller
     {
         [HttpGet]
-        public ActionResult Login()
+        public ActionResult Login(string mensaje = "")
         {
+            ViewBag.MotivoCierreSesion = mensaje;
             return View();
+
         }
 
         [HttpPost]
@@ -21,9 +23,11 @@ namespace ObligatorioP3MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (HomeController.ValidarUsuario(usuario.Nombre,usuario.Pass))
+                string Rol = HomeController.ValidarUsuario(usuario.Nombre, usuario.Pass);
+                if (Rol == "Administrador" || Rol == "Organizador" || Rol == "Proveedor")
                 {
-                    FormsAuthentication.SetAuthCookie(usuario.Nombre,false);
+                    Session["UsuarioLogueado"] = usuario.Nombre;
+                    Session["TipoDeUsuario"] = Rol;
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -33,18 +37,18 @@ namespace ObligatorioP3MVC.Controllers
             }
             return View(usuario);
         }
-        public ActionResult Logout()
+        public ActionResult Logout(string mensaje = "")
         {
-            FormsAuthentication.SignOut();
-            HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
-            cookie1.Expires = DateTime.Now.AddYears(-1);
-            Response.Cookies.Add(cookie1);
-            return RedirectToAction("Login", "Home");
+
+            Session.Clear();
+            Session.Abandon();
+            Session.RemoveAll();
+            return RedirectToAction("Login", "Home",new { mensaje=mensaje});
         }
 
-        public static bool ValidarUsuario(string nombre, string pass)
+        public static string ValidarUsuario(string nombre, string pass)
         {
-            bool retorno = false;
+            string retorno = "";
             using (GestionEventosContext db = new GestionEventosContext())
             {
                 Usuario tmpUsuario = db.Usuarios.Find(nombre);
@@ -53,7 +57,7 @@ namespace ObligatorioP3MVC.Controllers
                     string sal = tmpUsuario.Sal;
                     if (Usuario.GenerarSHA256Hash(pass, sal) == tmpUsuario.Pass)
                     {
-                        retorno = true;
+                        retorno = tmpUsuario.Rol.ToString(); ;
                     }
                 }
 
@@ -63,21 +67,21 @@ namespace ObligatorioP3MVC.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (this.esAdmin())
+                return View();
+            else
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
         }
 
-        public ActionResult About()
+        public bool esAdmin()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            return Session["TipoDeUsuario"].ToString() == "Administrador" ? true : false;
         }
-
-        public ActionResult Contact()
+        public bool esOrganizador()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return Session["TipoDeUsuario"].ToString() == "Organizador" ? true : false;
         }
     }
 }
