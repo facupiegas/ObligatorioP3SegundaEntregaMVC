@@ -44,7 +44,66 @@ namespace ObligatorioP3MVC.Controllers
             return View(listaProveedores);
         }
 
-        //esta accion solo puede ser utilizada por el organizador logueado 
+        public ActionResult ListarEventosDeOrganizador(string nombreEvento = "",string nombreOrganizador="")
+        {
+            if (!this.esOrganizador() && !this.esAdmin())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+
+            EventoServicioContratadoViewModel vm = null;
+
+            if (this.esOrganizador())
+            {
+                vm = new EventoServicioContratadoViewModel();
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+
+                    string org = Session["OrganizadorLogueado"].ToString();
+                    vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Organizador.NombreOrganizador == org).ToList();
+                    if (nombreEvento != "")
+                    {
+                        ViewBag.NombreEvento = nombreEvento;
+                        vm.ServiciosContratados = db.ServicioContratados.Where(p => p.NombreEvento == nombreEvento).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.NombreEvento = null;
+                    }
+                }           
+            }
+            if (this.esAdmin())
+            {
+                vm = new EventoServicioContratadoViewModel();
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+                    vm.Organizadores = db.Organizadores.ToList();
+                    if (nombreOrganizador != "")
+                    {
+                        ViewBag.NombreOrganizador = nombreOrganizador;
+                        vm.Eventos = db.Eventos.Where(p => p.Organizador.NombreOrganizador == nombreOrganizador).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.NombreOrganizador = null;
+                    }
+                    if (nombreEvento != "")
+                    {
+                        ViewBag.NombreEvento = nombreEvento;
+                        vm.ServiciosContratados = db.ServicioContratados.Where(p => p.NombreEvento == nombreEvento).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.NombreEvento = null;
+                    }
+                }
+            }
+
+            return View(vm);
+        }
+
         public ActionResult CalificarProveedor(string nombreEvento = "")
         {
             if (!this.esOrganizador())
@@ -55,7 +114,7 @@ namespace ObligatorioP3MVC.Controllers
             }
             else
             {
-                CalificarProveedorViewModel vm = new CalificarProveedorViewModel();
+                EventoServicioContratadoViewModel vm = new EventoServicioContratadoViewModel();
                 using (GestionEventosContext db = new GestionEventosContext())
                 {
 

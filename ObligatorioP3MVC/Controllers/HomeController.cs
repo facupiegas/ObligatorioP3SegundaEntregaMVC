@@ -58,8 +58,12 @@ namespace ObligatorioP3MVC.Controllers
                     if (Usuario.GenerarSHA256Hash(pass, sal) == tmpUsuario.Pass)
                     {
                         retorno = tmpUsuario.Rol.ToString();
-                        Organizador org = db.Organizadores.Where(p => p.Usuario.Nombre == nombre).First();
-                        Session["OrganizadorLogueado"] = org.NombreOrganizador.ToString();
+                        if (nombre.Contains("@"))
+                        {
+                            Organizador org = db.Organizadores.Where(p => p.Usuario.Nombre == nombre).First();
+                            Session["OrganizadorLogueado"] = org.NombreOrganizador.ToString();
+                        }
+                        
                     }
                 }
 
