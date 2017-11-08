@@ -67,34 +67,57 @@ namespace ObligatorioP3MVC.Controllers
         [HttpGet]
         public ActionResult Editar()
         {
-            Organizador org = new Organizador();
-            return View(org);
+            if (!this.esOrganizador())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+
+                Organizador org = null;
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+                    org = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
+                }
+                return View(org);
+            }
         }
         [HttpPost]
         public ActionResult Editar(Organizador org)
         {
-            var parametroDeAccion = (Object)null;
-            string accion = string.Empty;
-            if (org != null)
+            if (!this.esOrganizador())
             {
-                using (GestionEventosContext db = new GestionEventosContext())
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+                var parametroDeAccion = (Object)null;
+                string accion = string.Empty;
+                if (org != null)
                 {
-                    Organizador auxOrg = db.Organizadores.Find(org.NombreOrganizador);
-                    if (auxOrg != null)
+                    using (GestionEventosContext db = new GestionEventosContext())
                     {
-                        auxOrg.Telefono = org.Telefono;
-                        db.SaveChanges();
-                        accion = "Datos";
-                        TempData["Organizador"] = auxOrg;
-                    }
-                    else
-                    {
-                        accion = "Error";
-                        parametroDeAccion = new { mensaje = "" };
+                        Organizador auxOrg = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
+                        if (auxOrg != null)
+                        {
+                            auxOrg.Telefono = org.Telefono;
+                            db.SaveChanges();
+                            accion = "Datos";
+                            TempData["Organizador"] = auxOrg;
+                        }
+                        else
+                        {
+                            accion = "Error";
+                            parametroDeAccion = new { mensaje = "" };
+                        }
                     }
                 }
+                return RedirectToAction(accion, parametroDeAccion);
             }
-            return RedirectToAction(accion, parametroDeAccion);
         }
 
         public ActionResult Datos()
@@ -110,12 +133,22 @@ namespace ObligatorioP3MVC.Controllers
 
         public ActionResult Listar()
         {
-            var lista = new List<Organizador>();
-            using (GestionEventosContext db = new GestionEventosContext())
+
+            if (!this.esAdmin())
             {
-                lista = db.Organizadores.ToList();
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
             }
-            return View(lista);
+            else
+            {
+                var lista = new List<Organizador>();
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+                    lista = db.Organizadores.ToList();
+                }
+                return View(lista);
+            }
         }
 
         public bool esAdmin()
