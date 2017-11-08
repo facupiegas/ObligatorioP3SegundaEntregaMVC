@@ -14,16 +14,7 @@
         <h4>Organizador</h4>
         <hr />
         <div class="form-group">
-            <p>Ingrese el nombre del Organizador que desea editar Telefono</p>
-            @Html.LabelFor(model => model.NombreOrganizador, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NombreOrganizador, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NombreOrganizador, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <hr>
-        <div class="form-group">
-            <p>Ingrese el nuevo numero de Telefono</p>
+            <p>@Session["OrganizadorLogueado"].ToString() por favor ingrese su nuevo numero de Telefono</p>
             @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })

@@ -23,7 +23,7 @@ namespace ObligatorioP3MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                string Rol = HomeController.ValidarUsuario(usuario.Nombre, usuario.Pass);
+                string Rol = this.ValidarUsuario(usuario.Nombre, usuario.Pass);
                 if (Rol == "Administrador" || Rol == "Organizador" || Rol == "Proveedor")
                 {
                     Session["UsuarioLogueado"] = usuario.Nombre;
@@ -46,7 +46,7 @@ namespace ObligatorioP3MVC.Controllers
             return RedirectToAction("Login", "Home",new { mensaje=mensaje});
         }
 
-        public static string ValidarUsuario(string nombre, string pass)
+        public string ValidarUsuario(string nombre, string pass)
         {
             string retorno = "";
             using (GestionEventosContext db = new GestionEventosContext())
@@ -57,7 +57,9 @@ namespace ObligatorioP3MVC.Controllers
                     string sal = tmpUsuario.Sal;
                     if (Usuario.GenerarSHA256Hash(pass, sal) == tmpUsuario.Pass)
                     {
-                        retorno = tmpUsuario.Rol.ToString(); ;
+                        retorno = tmpUsuario.Rol.ToString();
+                        Organizador org = db.Organizadores.Where(p => p.Usuario.Nombre == nombre).First();
+                        Session["OrganizadorLogueado"] = org.NombreOrganizador.ToString();
                     }
                 }
 
@@ -67,12 +69,16 @@ namespace ObligatorioP3MVC.Controllers
 
         public ActionResult Index()
         {
-            if (this.esAdmin())
+            if (this.esOrganizador() || this.esAdmin())
+            {
                 return View();
+            }
             else
+            {
                 return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
                                                             para utilizar el recurso.
                                                             Por favor inicie sesión con las credenciales adecuadas" });
+            }
         }
 
         public bool esAdmin()
