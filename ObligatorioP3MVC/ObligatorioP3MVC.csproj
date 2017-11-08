@@ -145,8 +145,8 @@
     <Compile Include="Models\TipoServicio.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\CalificarProveedorViewModel.cs" />
     <Compile Include="ViewModels\CrearCalificacionViewModel.cs" />
+    <Compile Include="ViewModels\EventoServicioContratadoViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -191,6 +191,7 @@
     <Content Include="Views\Evento\ListadoMejorCalificados.cshtml" />
     <Content Include="Views\Evento\ListadoMasElegidos.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Evento\ListarEventosDeOrganizador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
