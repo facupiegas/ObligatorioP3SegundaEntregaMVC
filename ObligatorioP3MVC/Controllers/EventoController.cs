@@ -22,6 +22,51 @@ namespace ObligatorioP3MVC.Controllers
             ViewBag.Mensaje = mensaje;
             return View();
         }
+        public ActionResult EventosEntreFechas(DateTime? fechaInicial =null,DateTime? fechaFinal=null)
+        {
+            if (!this.esAdmin())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+                EventoServicioContratadoViewModel vm = new EventoServicioContratadoViewModel();
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+
+                    ////HAY QUE CHECKEAR QUE LOS RANGOS DE FECHAS ESTEN BIEN, FINCIAL MENOR QUE FMAYOR BLA BLA BLA
+                    fechaInicial = new DateTime(2015, 12, 10); ////////////////////dato de prueba... SACAR!!!
+                    fechaFinal = new DateTime(2015, 12, 11); ////////////////////dato de prueba... SACAR!!!
+                    bool evaluarOtrosCasos = true;
+                    if (fechaInicial != null & fechaFinal != null)
+                    {
+                        evaluarOtrosCasos = false;
+                        vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Fecha >= fechaInicial).Where(p => p.Fecha <= fechaFinal).ToList();
+                    }
+                    if (evaluarOtrosCasos)
+                    {
+                        fechaInicial = new DateTime(2015, 12, 11); ////////////////////dato de prueba... SACAR!!!
+                        if (fechaInicial != null)
+                        {
+                            vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Fecha >= fechaInicial).ToList();
+                        }
+                        fechaFinal = new DateTime(2016, 12, 11); ////////////////////dato de prueba... SACAR!!!
+                        if (fechaFinal != null)
+                        {
+                            vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Fecha <= fechaFinal).ToList();
+                        }
+                        if (fechaFinal == null && fechaInicial == null)
+                        {
+                            vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").ToList();
+                        }
+                    }
+                }
+                    return View(vm);
+            }
+        }
+          
 
         public ActionResult ListadoMejorCalificados()
         {
