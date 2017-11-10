@@ -5,55 +5,83 @@
 }
 
 <h2>Eventos Entre Fechas</h2>
+<hr />
+@using (Html.BeginForm())
+{
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+    <div class="form-group">
+        @Html.LabelFor(model => model.FechaInicial, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FechaInicial, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FechaInicial, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
-
-<table class="table table-hover">
-    <tr>
-        <th>Nombre Evento</th>
-        <th>Organizador</th>
-        <th>Fecha</th>
-        <th>Direccion</th>
-        <th>Tipo Evento</th>
-        <th>Realizado</th>
-    </tr>
-
-    @foreach (var item in Model.Eventos)
-    {
-        string selectedRow = "";
-        if (item.Nombre == ViewBag.NombreEvento)
-        {
-            selectedRow = "success";
-        }
-        <tr class="@selectedRow">
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Organizador.NombreOrganizador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoEvento.NombreTipoEvento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Realizado)
-            </td>
-            <td>
-                @Html.ActionLink("Seleccionar", "EventosEntreFechas", new { nombreEvento = item.Nombre, nombreOrganizador = item.Organizador.NombreOrganizador })
-            </td>
-        </tr>
-    }
-
-</table>
-
-
-
-<div>
-    @Html.ActionLink("Volver al menú principal", "Index", "Home")
+    <div class="form-group">
+        @Html.LabelFor(model => model.FechaFinal, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FechaFinal, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FechaFinal, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Listar Eventos" class="btn btn-default" />
+        </div>
+    </div>
 </div>
+
+}
+   @if (Model.Eventos != null)
+   {
+    <table class="table table-hover">
+        <tr>
+            <th>Nombre Evento</th>
+            <th>Organizador</th>
+            <th>Fecha</th>
+            <th>Direccion</th>
+            <th>Tipo Evento</th>
+            <th>Realizado</th>
+        </tr>
+
+        @foreach (var item in Model.Eventos)
+        {
+            string selectedRow = "";
+            if (item.Nombre == ViewBag.NombreEvento)
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Organizador.NombreOrganizador)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Direccion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoEvento.NombreTipoEvento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Realizado)
+                </td>
+                <td>
+                    @Html.ActionLink("Seleccionar", "EventosEntreFechas", new { nombreEvento = item.Nombre, nombreOrganizador = item.Organizador.NombreOrganizador })
+                </td>
+            </tr>
+        }
+
+    </table>
+   }
+
+
+    <div>
+        @Html.ActionLink("Volver al menú principal", "Index", "Home")
+    </div>
