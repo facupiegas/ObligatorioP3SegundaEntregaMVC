@@ -13,6 +13,7 @@ namespace ObligatorioP3MVC.Controllers
         [HttpGet]
         public ActionResult Login(string mensaje = "")
         {
+            //en caso de no loguearse con las credenciales adecuadas se muestra un mensaje de error
             ViewBag.MotivoCierreSesion = mensaje;
             return View();
 
@@ -23,11 +24,9 @@ namespace ObligatorioP3MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                string Rol = this.ValidarUsuario(usuario.Nombre, usuario.Pass);
-                if (Rol == "Administrador" || Rol == "Organizador" || Rol == "Proveedor")
+                if (this.ValidarUsuario(usuario.Nombre, usuario.Pass))
                 {
                     Session["UsuarioLogueado"] = usuario.Nombre;
-                    Session["TipoDeUsuario"] = Rol;
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -46,19 +45,24 @@ namespace ObligatorioP3MVC.Controllers
             return RedirectToAction("Login", "Home",new { mensaje=mensaje});
         }
 
-        public string ValidarUsuario(string nombre, string pass)
+        public bool ValidarUsuario(string nombre, string pass)
         {
-            string retorno = "";
+            bool retorno = false;
             using (GestionEventosContext db = new GestionEventosContext())
             {
+                //busco el usuario con el nombre ingresado en la bd
                 Usuario tmpUsuario = db.Usuarios.Find(nombre);
                 if (tmpUsuario != null)
                 {
+                    //recupero la sal del usuario guardado
                     string sal = tmpUsuario.Sal;
-                    if (Usuario.GenerarSHA256Hash(pass, sal) == tmpUsuario.Pass)
+                    //genero una password con la contraseña ingresada por parametro y la sal del usuario guardado en la base y compruebo con la password del usuario
+                    if (Usuario.GenerarSHA256Hash(pass, sal) == tmpUsuario.Pass) 
                     {
-                        retorno = tmpUsuario.Rol.ToString();
-                        if (nombre.Contains("@"))
+                        //guardo el rol del Usuario autenticado
+                        Session["TipoDeUsuario"] = tmpUsuario.Rol.ToString(); 
+                        retorno = true;
+                        if (nombre.Contains("@")) //si el nombre contiene @ quiere decir que es un usuario con rol de Organizador
                         {
                             Organizador org = db.Organizadores.Where(p => p.Usuario.Nombre == nombre).First();
                             Session["OrganizadorLogueado"] = org.NombreOrganizador.ToString();

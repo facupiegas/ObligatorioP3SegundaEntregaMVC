@@ -26,7 +26,7 @@ namespace ObligatorioP3MVC.Controllers
         [HttpPost]
         public ActionResult Crear(Organizador org)
         {
-            //Defino variales auxiliares para el retorno
+            //Defino variables auxiliares para el retorno
             var parametroDeAccion = (Object)null;
             string accion = string.Empty;
             if (ModelState.IsValid)
