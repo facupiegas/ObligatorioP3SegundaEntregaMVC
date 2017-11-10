@@ -26,6 +26,7 @@ namespace ObligatorioP3MVC.Controllers
         [HttpPost]
         public ActionResult Crear(Organizador org)
         {
+            //Defino variales auxiliares para el retorno
             var parametroDeAccion = (Object)null;
             string accion = string.Empty;
             if (ModelState.IsValid)
@@ -36,9 +37,12 @@ namespace ObligatorioP3MVC.Controllers
                     {
                         if (db.Usuarios.Find(org.Email) == null)
                         {
+                            //Creo el Usuario
                             Usuario tmpUser = new Usuario(org.Email, org.Usuario.Pass, Usuario.EnumRol.Organizador);
+                            //Asigno el Usuario creado al Organizador
                             org.Usuario = tmpUser;
                             db.Organizadores.Add(org);
+                            //Guardo el Organizador en la base
                             db.SaveChanges();
                             accion = "Datos";
                             parametroDeAccion = new { nombre = org.NombreOrganizador };
@@ -61,6 +65,7 @@ namespace ObligatorioP3MVC.Controllers
             {
                 return View();
             }
+            //El destino de la redireccion depende del resultado de la operacion
             return RedirectToAction(accion, parametroDeAccion);
         }
 
@@ -95,6 +100,7 @@ namespace ObligatorioP3MVC.Controllers
             }
             else
             {
+                //Defino variales auxiliares para el retorno
                 var parametroDeAccion = (Object)null;
                 string accion = string.Empty;
                 if (org != null)
@@ -104,6 +110,7 @@ namespace ObligatorioP3MVC.Controllers
                         Organizador auxOrg = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
                         if (auxOrg != null)
                         {
+                            //asigno el nuevo telefono al Organizador
                             auxOrg.Telefono = org.Telefono;
                             db.SaveChanges();
                             accion = "Datos";
