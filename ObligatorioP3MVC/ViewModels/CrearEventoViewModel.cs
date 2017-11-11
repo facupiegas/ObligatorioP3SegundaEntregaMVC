@@ -25,6 +25,8 @@ namespace ObligatorioP3MVC.ViewModels
         public SelectList TipoServicios { get; set; }
 
         public string IdTipoServicio { get; set; }
+        public List<Proveedor> Proveedores { get; set; }
+        public List<Servicio> ServiciosProveedores { get; set; }
 
         public CrearEventoViewModel(List<TipoEvento> tipoEventos)
         {
