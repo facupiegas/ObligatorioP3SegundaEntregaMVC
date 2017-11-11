@@ -22,6 +22,77 @@ namespace ObligatorioP3MVC.Controllers
             ViewBag.Mensaje = mensaje;
             return View();
         }
+
+        [HttpGet]
+        public ActionResult CrearEvento()
+        {
+            if (!this.esOrganizador())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+                CrearEventoViewModel vm = null;
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+                    vm = new CrearEventoViewModel(db.TipoEventos.ToList());
+                }
+                return View(vm);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CrearEvento(CrearEventoViewModel vm)
+        {
+            if (!this.esOrganizador())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+                if (vm.Fecha < DateTime.Now)
+                {
+                    ModelState.AddModelError("","La fecha debe ser mayor a la actual.");
+                }
+                if (ModelState.IsValid)
+                {
+                    using (GestionEventosContext db = new GestionEventosContext())
+                    {
+
+                        Evento auxEv = db.Eventos.Find(vm.Evento.Nombre);
+                        if (auxEv != null)
+                        {
+                            ModelState.AddModelError("", "Ya existe un Evento con ese nombre.");
+                        }
+                        else
+                        {
+                            DateTime coso = new DateTime(2018, 12, 12, 0, 0, 0,0);
+                            var direccion = db.Eventos.Where(p => p.Direccion == vm.Evento.Direccion).FirstOrDefault();
+                            var fecha = db.Eventos.Where(p => p.Fecha == coso).FirstOrDefault();
+                            var fechaYDireccion = db.Eventos.Where(p => p.Direccion == vm.Evento.Direccion)
+                                .Where(p => p.Fecha == vm.Evento.Fecha).FirstOrDefault();
+                            if (fecha != null)
+                            {
+                                ModelState.AddModelError("","Ya existe un Evento en esa fecha y direccion");
+                            }
+                            else
+                            {
+                                TipoEvento tipoEv = db.TipoEventos.Find(vm.IdTipoEvento);
+                                db.Entry(tipoEv).Collection(p => p.TiposServicios).Load();
+                                List<TipoServicio> listaTipoServ = tipoEv.TiposServicios;
+                                vm.TipoServicios = new SelectList(listaTipoServ, "NombreTipoServicio", "NombreTipoServicio");
+                                vm.TipoEventos = new SelectList(db.TipoEventos.ToList(), "NombreTipoEvento", "NombreTipoEvento");
+                            }
+                        }
+                    }
+                }
+                return View(vm);
+            }
+        }
         public ActionResult EventosEntreFechas(DateTime? fechaInicial =null,DateTime? fechaFinal=null)
         {
             if (!this.esAdmin())
