@@ -1,7 +1,7 @@
 ﻿@model ObligatorioP3MVC.ViewModels.EventoServicioContratadoViewModel
 
 @{
-    ViewBag.Title = "EventosEntreFechas";
+    ViewBag.Title = "Eventos Entre Fechas";
 }
 
 <h2>Eventos Entre Fechas</h2>
@@ -9,6 +9,7 @@
 @using (Html.BeginForm())
 {
 <div class="form-horizontal">
+    <p>Por favor ingrese un rango de fechas</p>
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <div class="form-group">
@@ -32,7 +33,8 @@
         </div>
     </div>
 </div>
-
+<br/>
+<br />
 }
    @if (Model.Eventos != null)
    {

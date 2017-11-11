@@ -160,11 +160,11 @@ namespace ObligatorioP3MVC.Controllers
 
         public bool esAdmin()
         {
-            return Session["TipoDeUsuario"].ToString() == "Administrador" ? true : false;
+            return Session["TipoDeUsuario"] != null && Session["TipoDeUsuario"].ToString() == "Administrador" ? true : false;
         }
         public bool esOrganizador()
         {
-            return Session["TipoDeUsuario"].ToString() == "Organizador" ? true : false;
+            return Session["TipoDeUsuario"] != null && Session["TipoDeUsuario"].ToString() == "Organizador" ? true : false;
         }
     }
 }

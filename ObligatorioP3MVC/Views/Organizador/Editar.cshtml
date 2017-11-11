@@ -1,10 +1,10 @@
 ﻿@model ObligatorioP3MVC.Models.Organizador
 
 @{
-    ViewBag.Title = "Editar";
+    ViewBag.Title = "Editar Organizador";
 }
 
-<h2>Editar</h2>
+<h2>Editar Organizador</h2>
 
 @using (Html.BeginForm())
 {
@@ -14,7 +14,7 @@
         <h4>Organizador</h4>
         <hr />
         <div class="form-group">
-            <p>@Session["OrganizadorLogueado"].ToString() por favor ingrese su nuevo numero de Telefono</p>
+            <p><strong>@Session["OrganizadorLogueado"].ToString()</strong> por favor ingrese su nuevo número de Teléfono</p>
             @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
