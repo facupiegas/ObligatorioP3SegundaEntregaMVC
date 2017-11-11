@@ -1,17 +1,18 @@
 ﻿@model ObligatorioP3MVC.Models.Organizador
 
 @{
-    ViewBag.Title = "Crear";
+    ViewBag.Title = "Registrar Organizador";
 }
 
-<h2>Crear</h2>
+<h2>Registrar Organizador</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Organizador</h4>
+        <br/>
+        <h3>Por favor ingrese sus datos</h3>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

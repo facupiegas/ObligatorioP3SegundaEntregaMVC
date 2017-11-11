@@ -3,65 +3,115 @@
 }
 
 <div class="jumbotron">
-    <h1>Gestion de Eventos</h1>
-    <p class="lead">Proyecto para P3.</p>
+    <h2>Gestión de Eventos</h2>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Alta Organizador</h2>
-        <p>
-            Crear y guardar un Organizador en el sistema.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Organizador/Crear">Crear &raquo;</a></p>
+@if (Session["TipoDeUsuario"] != null && Session["TipoDeUsuario"].ToString() == "Administrador")
+{
+
+
+    <div class="row">
+    
+        <div class="col-md-4">
+            <h2>Alta Organizador</h2>
+            <p>
+                Crear y guardar un Organizador en el sistema.
+            </p>
+            @Html.ActionLink("Crear Organizador", "Crear", "Organizador", new { },new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Listado de Organizadores</h2>
+            <p>
+                Listado de Organizadores registrados en el sistema.
+            </p>
+            @Html.ActionLink("Listar Organizadores", "Listar", "Organizador", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Proveedores Mejor Calificados</h2>
+            <p>
+                Proveedores con la calificacion mas alta.
+            </p>
+            @Html.ActionLink("Listar", "ListadoMejorCalificados", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Proveedores Mas Seleccionados</h2>
+            <p>
+                Proveedores mas seleccionados.
+            </p>
+            @Html.ActionLink("Listar", "ListadoMasElegidos", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Listar Eventos por Organizador</h2>
+            <p>
+                Listado de Eventos de un Organizador.
+            </p>
+            @Html.ActionLink("Listar Eventos", "ListarEventosDeOrganizador", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Eventos entre fechas</h2>
+            <p>
+                Listado de Eventos entre fechas.
+            </p>
+            @Html.ActionLink("Listar Eventos", "EventosEntreFechas", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Editar Organizador</h2>
-        <p>
-            Editar telefono de un Organizador registrado en el sistema.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Organizador/Editar">Editar &raquo;</a></p>
+}
+
+
+@if (Session["TipoDeUsuario"] != null && Session["TipoDeUsuario"].ToString() == "Organizador")
+{
+
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <h2>Alta Organizador</h2>
+            <p>
+                Crear y guardar un Organizador en el sistema.
+            </p>
+            @Html.ActionLink("Crear Organizador", "Crear", "Organizador", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Editar Organizador</h2>
+            <p>
+                Editar telefono de un Organizador registrado en el sistema.
+            </p>
+            @Html.ActionLink("Editar", "Editar", "Organizador", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Calificar Proveedor</h2>
+            <p>
+                Calificar un Proveedor de un Evento.
+            </p>
+            @Html.ActionLink("Calificar", "CalificarProveedor", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Proveedores Mejor Calificados</h2>
+            <p>
+                Proveedores con la calificacion mas alta.
+            </p>
+            @Html.ActionLink("Listar", "ListadoMejorCalificados", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Proveedores Mas Seleccionados</h2>
+            <p>
+                Proveedores mas seleccionados.
+            </p>
+            @Html.ActionLink("Listar", "ListadoMasElegidos", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Listar Eventos por Organizador</h2>
+            <p>
+                Listado de Eventos de un Organizador.
+            </p>
+            @Html.ActionLink("Listar Eventos", "ListarEventosDeOrganizador", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-4">
+            <h2>Crear un Evento</h2>
+            <p>
+                Registrar un Evento en el Sistema.
+            </p>
+            @Html.ActionLink("MODIFICAR ACA", "ListarEventosDeOrganizador", "Evento", new { }, new { @class = "btn btn-default" })
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Listado de Organizadores</h2>
-        <p>
-            Listado de Organizadores registrados en el sistema.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Organizador/Listar">Listar &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Calificar Proveedor</h2>
-        <p>
-            Calificar un Proveedor de un Evento.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Evento/CalificarProveedor">Calificar &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Proveedores Mejor Calificados</h2>
-        <p>
-            Proveedores con la calificacion mas alta.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Evento/ListadoMejorCalificados">Listar &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Proveedores Mas Seleccionados</h2>
-        <p>
-            Proveedores mas seleccionados.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Evento/ListadoMasElegidos">Listar &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Listar Eventos por Organizador</h2>
-        <p>
-            Listado de Eventos de un Organizador.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Evento/ListarEventosDeOrganizador">Listar &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Eventos entre fechas</h2>
-        <p>
-            Listado de Eventos entre fechas.
-        </p>
-        <p><a class="btn btn-default" href="http://localhost:21129/Evento/EventosEntreFechas">Listar &raquo;</a></p>
-    </div>
-</div>
+}

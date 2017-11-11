@@ -1,17 +1,17 @@
 ﻿@model ObligatorioP3MVC.Models.Usuario
 
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Log In";
 }
 
-<h2>Login</h2>
+<h2>Log In</h2>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Usuario</h4>
+        <h3>Ingrese sus datos</h3>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -39,7 +39,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <strong>Para crear un Organizador click @Html.ActionLink("Aqui", "Crear", "Organizador")</strong><br/><br/>
+                <strong>Para registrarse como Organizador @Html.ActionLink("click aquí", "Crear", "Organizador")</strong><br/><br/>
                 <p style="color:red">@ViewBag.MotivoCierreSesion</p>          
             </div>
         </div>
