@@ -17,8 +17,7 @@ namespace ObligatorioP3MVC.Models
         [Display(Name ="Nombre Evento")]
         public string Nombre { get; set; }
         [Required(ErrorMessage ="Debe seleccionar una fecha.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [Column(TypeName = "Date")]
         public DateTime Fecha { get; set; }
         [Required(ErrorMessage ="Debe ingresar una dirección.")]
         public string Direccion { get; set; }
