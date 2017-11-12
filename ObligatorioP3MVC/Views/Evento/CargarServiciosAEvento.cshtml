@@ -1,7 +1,7 @@
 ﻿@model ObligatorioP3MVC.ViewModels.CrearEventoViewModel
 
 @{
-    ViewBag.Title = "CargarServiciosAEvento";
+    ViewBag.Title = "Cargar Servicios A Evento";
 }
 
 <h2>CargarServiciosAEvento</h2>
@@ -18,7 +18,7 @@
                 @Html.DropDownListFor(model => model.IdTipoServicio, Model.TipoServicios)
             </div>
         </div>
-        <br/>
+        <br />
         <br />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -26,7 +26,7 @@
             </div>
         </div>
         <br />
-        <hr/>
+        <hr />
     }
 
 
@@ -86,41 +86,41 @@
 
 
     @*if (Model.IdTipoServicio != null)     //CAMBIAR ESTA CONDICION ////////////////////////////////////
-    {
-        <br/>
-        <table class="table table-hover">
-            <tr>
-                <th>Rut Proveedor</th>
-                <th>Nombre Servicio</th>
-                <th>Descripcion</th>
-            </tr>
+        {
+            <br/>
+            <table class="table table-hover">
+                <tr>
+                    <th>Rut Proveedor</th>
+                    <th>Nombre Servicio</th>
+                    <th>Descripcion</th>
+                </tr>
 
-            @foreach (var item in Model.ServiciosProveedores)
-            {
-                string selectedRow = "";
-                if (item.NombreServicio == ViewBag.NombreServicio)
+                @foreach (var item in Model.ServiciosProveedores)
                 {
-                    selectedRow = "success";
+                    string selectedRow = "";
+                    if (item.NombreServicio == ViewBag.NombreServicio)
+                    {
+                        selectedRow = "success";
+                    }
+                <tr class="@selectedRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rut)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreServicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Seleccionar", "CargarServiciosAEvento", new { rut = item.Rut, nombreServicio = item.NombreServicio })
+                    </td>
+                </tr>
                 }
-            <tr class="@selectedRow">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rut)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NombreServicio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descripcion)
-                </td>
-                <td>
-                    @Html.ActionLink("Seleccionar", "CargarServiciosAEvento", new { rut = item.Rut, nombreServicio = item.NombreServicio })
-                </td>
-            </tr>
-            }
 
-    </table>
-        }*@
-    }
+        </table>
+            }*@
+}
 
 
 <div>
