@@ -4,104 +4,27 @@
     ViewBag.Title = "Cargar Servicios A Evento";
 }
 
-<h2>CargarServiciosAEvento</h2>
-
-
+<h2>Cargar servicios de proveedor @ViewBag.Rut</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    if (Model.TipoServicios != null)
+    if (Model.ProveedorElegido != null)     //CAMBIAR ESTA CONDICION ////////////////////////////////////
     {
-        <div class="form-group">
-            @Html.LabelFor(model => model.TipoServicios, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.IdTipoServicio, Model.TipoServicios)
-            </div>
-        </div>
-        <br />
-        <br />
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Buscar Proveedores" class="btn btn-default" />
-            </div>
-        </div>
-        <br />
-        <hr />
-    }
-
-
-}
-@using (Html.BeginForm())
-{
-
-    if (Model.IdTipoServicio != null)     //CAMBIAR ESTA CONDICION ////////////////////////////////////
-    {
-        <br />
+    <br />
         <table class="table table-hover">
             <tr>
                 <th>Rut Proveedor</th>
-                <th>Nombre Fantasia</th>
-                <th>Email</th>
-                <th>Telefono</th>
-                <th>Vip</th>
-                <th>Calificacion</th>
+                <th>Nombre Servicio</th>
+                <th>Descripcion</th>
             </tr>
 
-            @foreach (var item in Model.Proveedores)
+            @foreach (var item in Model.ProveedorElegido.ServiciosOfrecidos)
             {
                 string selectedRow = "";
-                if (item.Rut == ViewBag.Rut)
+                if (item.NombreServicio == ViewBag.NombreServicio)
                 {
                     selectedRow = "success";
                 }
-                <tr class="@selectedRow">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Rut)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NomFantasia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Telefono)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Vip)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CalificacionGeneral)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Seleccionar", "CargarServiciosAEvento", new { rut = item.Rut })
-                    </td>
-                </tr>
-            }
-
-        </table>
-    }
-
-
-
-
-    @*if (Model.IdTipoServicio != null)     //CAMBIAR ESTA CONDICION ////////////////////////////////////
-        {
-            <br/>
-            <table class="table table-hover">
-                <tr>
-                    <th>Rut Proveedor</th>
-                    <th>Nombre Servicio</th>
-                    <th>Descripcion</th>
-                </tr>
-
-                @foreach (var item in Model.ServiciosProveedores)
-                {
-                    string selectedRow = "";
-                    if (item.NombreServicio == ViewBag.NombreServicio)
-                    {
-                        selectedRow = "success";
-                    }
                 <tr class="@selectedRow">
                     <td>
                         @Html.DisplayFor(modelItem => item.Rut)
@@ -113,16 +36,25 @@
                         @Html.DisplayFor(modelItem => item.Descripcion)
                     </td>
                     <td>
-                        @Html.ActionLink("Seleccionar", "CargarServiciosAEvento", new { rut = item.Rut, nombreServicio = item.NombreServicio })
+                        @Html.ActionLink("Agregar", "CargarServiciosAEvento", new { rut = item.Rut, nombreServicio = item.NombreServicio }, new { @class = "btn btn-default" })
                     </td>
                 </tr>
-                }
-
+            }
         </table>
-            }*@
+
+    }
+    <div class="row">
+        <div class="col-md-offset-6 col-md-2">
+            @Html.ActionLink("Seleccionar otro Proveedor", "SeleccionarProveedoresEvento", new { }, new { @class = "btn btn-default" })
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-2">
+                <input type="submit" value="Finalizar" class="btn btn-default" />
+            </div>
+        </div>
+
+    </div>
 }
-
-
-<div>
-    @Html.ActionLink("Volver al menú principal", "Index", "Home")
-</div>
+ <div>
+   @Html.ActionLink("Volver al menú principal", "Index", "Home")
+ </div>

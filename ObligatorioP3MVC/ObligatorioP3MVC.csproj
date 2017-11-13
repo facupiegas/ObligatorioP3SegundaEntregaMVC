@@ -195,6 +195,7 @@
     <Content Include="Views\Evento\ListarEventosDeOrganizador.cshtml" />
     <Content Include="Views\Evento\EventosEntreFechas.cshtml" />
     <Content Include="Views\Evento\CrearEvento.cshtml" />
+    <Content Include="Views\Evento\SeleccionarProveedoresEvento.cshtml" />
     <Content Include="Views\Evento\CargarServiciosAEvento.cshtml" />
   </ItemGroup>
   <ItemGroup>
