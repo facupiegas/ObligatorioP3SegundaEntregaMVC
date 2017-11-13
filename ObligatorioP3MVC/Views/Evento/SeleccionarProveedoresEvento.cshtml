@@ -1,0 +1,91 @@
+﻿@model ObligatorioP3MVC.ViewModels.CrearEventoViewModel
+
+@{
+    ViewBag.Title = "Seleccionar Proveedor";
+}
+
+<h2>Seleccionar Proveedor</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    if (Model.TipoServicios != null)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoServicios, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.IdTipoServicio, Model.TipoServicios)
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Buscar Proveedores" class="btn btn-default" />
+            </div>
+        </div>
+        <br />
+        <hr />
+    }
+
+}
+
+
+@if (Model.IdTipoServicio != null)     
+{
+    <br />
+        <table class="table table-hover">
+            <tr>
+                <th>Rut Proveedor</th>
+                <th>Nombre Fantasia</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Vip</th>
+                <th>Calificacion</th>
+            </tr>
+
+            @foreach (var item in Model.Proveedores)
+            {
+                string selectedRow = "";
+                if (item.Rut == ViewBag.Rut)
+                {
+                    selectedRow = "success";
+                }
+                <tr class="@selectedRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rut)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomFantasia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefono)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vip)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CalificacionGeneral)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Seleccionar", "CargarServiciosAEvento", new { rut = item.Rut })
+                    </td>
+                </tr>
+            }
+
+        </table>
+}
+
+
+
+
+       
+
+
+<div>
+  @Html.ActionLink("Volver al menú principal", "Index", "Home")
+</div>

@@ -82,7 +82,7 @@ namespace ObligatorioP3MVC.Controllers
                                 db.Entry(tipoEv).Collection(p => p.TiposServicios).Load();
                                 vm.Evento.TipoEvento = tipoEv;
                                 Session["CrearEventoVM"] = vm;
-                                return RedirectToAction("CargarServiciosAEvento");
+                                return RedirectToAction("SeleccionarProveedoresEvento");
                             }
                         }
                     }
@@ -92,73 +92,184 @@ namespace ObligatorioP3MVC.Controllers
         }
 
         [HttpGet]
-        public ActionResult CargarServiciosAEvento()
+        public ActionResult SeleccionarProveedoresEvento()
         {
-            CrearEventoViewModel vm = (CrearEventoViewModel)Session["CrearEventoVM"];
-            using (GestionEventosContext db = new GestionEventosContext())
+            if (!this.esOrganizador())
             {
-                Organizador orgLogueado = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
-                if (orgLogueado != null)
-                {
-
-                    Evento tmpEvento = new Evento()
-                    {
-                        Nombre = vm.Evento.Nombre,
-                        Fecha = vm.Fecha,
-                        Direccion = vm.Evento.Direccion,
-                        TipoEvento = vm.Evento.TipoEvento,
-                        Realizado = false,
-                        Organizador = orgLogueado,
-                        ServiciosContratados = new List<ServicioContratado>()
-                    };
-
-                    List<TipoServicio> listaTipoServ = tmpEvento.TipoEvento.TiposServicios;
-                    vm.TipoServicios = new SelectList(listaTipoServ, "NombreTipoServicio", "NombreTipoServicio");
-                    vm.TipoEventos = new SelectList(db.TipoEventos.ToList(), "NombreTipoEvento", "NombreTipoEvento");
-                }
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
             }
-            
-            return View(vm);
-        }
-        [HttpPost]
-        public ActionResult CargarServiciosAEvento(CrearEventoViewModel vm = null,string rut = "",string nombreServicio ="")
-        {
-            CrearEventoViewModel auxVm = (CrearEventoViewModel)Session["CrearEventoVM"];
-            if (vm != null)
+            else
             {
-                auxVm.IdTipoServicio = vm.IdTipoServicio;
-                Session["CrearEventoVM"] = auxVm;
-            }
-            if (auxVm.IdTipoServicio != null)
-            {
+                CrearEventoViewModel vm = (CrearEventoViewModel)Session["CrearEventoVM"];
                 using (GestionEventosContext db = new GestionEventosContext())
                 {
-                    List<Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
-                    List<Proveedor> listaProveedores = db.Proveedores.Include("Calificaciones").ToList();
-                    List<Proveedor> listaProvAMostrar = new List<Proveedor>();
-                    foreach (Proveedor auxProveedor in listaProveedores)
+                    Organizador orgLogueado = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
+                    if (orgLogueado != null)
                     {
-                        bool aMostrar = false;
-                        foreach (Servicio auxServicio in listaServicios)
+
+                        Evento tmpEvento = new Evento()
                         {
-                            if (auxServicio.Rut == auxProveedor.Rut)
-                            {
-                                auxProveedor.ServiciosOfrecidos.Add(auxServicio);
-                                aMostrar = true;                           
-                            }
-                        }
-                        if (aMostrar)
+                            Nombre = vm.Evento.Nombre,
+                            Fecha = vm.Fecha,
+                            Direccion = vm.Evento.Direccion,
+                            TipoEvento = vm.Evento.TipoEvento,
+                            Realizado = false,
+                            Organizador = orgLogueado,
+                            ServiciosContratados = new List<ServicioContratado>()
+                        };
+
+                        List<TipoServicio> listaTipoServ = tmpEvento.TipoEvento.TiposServicios;
+                        vm.TipoServicios = new SelectList(listaTipoServ, "NombreTipoServicio", "NombreTipoServicio");
+                        vm.TipoEventos = new SelectList(db.TipoEventos.ToList(), "NombreTipoEvento", "NombreTipoEvento");
+                    }
+                }
+
+
+                return View(vm);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SeleccionarProveedoresEvento(CrearEventoViewModel vm = null, string rut = "")
+        {
+            if (!this.esOrganizador())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+                CrearEventoViewModel auxVm = (CrearEventoViewModel)Session["CrearEventoVM"];
+                if (vm != null)
+                {
+                    auxVm.IdTipoServicio = vm.IdTipoServicio;
+                    Session["CrearEventoVM"] = auxVm;
+                }
+                if (rut != "")
+                {
+                    foreach (Proveedor tmpProv in auxVm.Proveedores)
+                    {
+                        if (tmpProv.Rut == rut)
                         {
-                            listaProvAMostrar.Add(auxProveedor);
+                            auxVm.ProveedorElegido = tmpProv;
+                            Session["CrearEventoVM"] = auxVm;
                         }
                     }
-                    auxVm.Proveedores = listaProvAMostrar;
-                    auxVm.ServiciosProveedores = listaServicios;
-                    Session["CrearEventoVM"] = auxVm;
+                }
+                else
+                {
+                    if (auxVm.IdTipoServicio != null)
+                    {
+                        using (GestionEventosContext db = new GestionEventosContext())
+                        {
+                            List<Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
+                            List<Proveedor> listaProveedores = db.Proveedores.Include("Calificaciones").ToList();
+                            List<Proveedor> listaProvAMostrar = new List<Proveedor>();
+                            foreach (Proveedor auxProveedor in listaProveedores)
+                            {
+                                auxProveedor.ServiciosOfrecidos.Clear();//limpio la lista de servicios del proveedor para no mostrar servicios no adecuados
+                                bool aMostrar = false;
+                                foreach (Servicio auxServicio in listaServicios)
+                                {
+                                    if (auxServicio.Rut == auxProveedor.Rut)
+                                    {
+                                        auxProveedor.ServiciosOfrecidos.Add(auxServicio);
+                                        aMostrar = true;
+                                    }
+                                }
+                                if (aMostrar)
+                                {
+                                    listaProvAMostrar.Add(auxProveedor);
+                                }
+                            }
+                            auxVm.Proveedores = listaProvAMostrar;
+                            auxVm.ServiciosProveedores = listaServicios;
+                            Session["CrearEventoVM"] = auxVm;
+                        }
+                    }
+                }
+                return View(auxVm);
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult CargarServiciosAEvento(CrearEventoViewModel vm = null, string rut = "",string nombreServicio ="") 
+        {
+            if (!this.esOrganizador())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+                CrearEventoViewModel auxVm = (CrearEventoViewModel)Session["CrearEventoVM"];
+                if (nombreServicio != "")
+                {
+                    using (GestionEventosContext db = new GestionEventosContext())
+                    {
+                        Servicio tmpServicio = db.Servicios.Find(rut, nombreServicio);
+                        if (tmpServicio != null)
+                        {
+                            ServicioContratado tmpServicioContratado = new ServicioContratado()
+                            {
+                                Fecha = auxVm.Fecha,
+                                Rut = rut,
+                                NombreServicio = nombreServicio,
+                                NombreEvento = auxVm.Evento.Nombre,
+                                yaCalificado = false,
+                                Servicio = tmpServicio
+
+                            };
+                            auxVm.Evento.ServiciosContratados.Add(tmpServicioContratado);
+                            foreach (Proveedor auxProv in auxVm.Proveedores)
+                            {
+                                if(auxProv.Rut == rut)
+                                {
+                                    auxProv.ServiciosOfrecidos.RemoveAll(x => x.NombreServicio == nombreServicio);
+                                }
+                            }
+                            Session["CrearEventoVM"] = auxVm;
+                        }
+                    }
                     
                 }
+                else
+                {
+                    if (rut != "")
+                    {
+                        ViewBag.Rut = rut;
+                        foreach (Proveedor tmpProv in auxVm.Proveedores)
+                        {
+                            if (tmpProv.Rut == rut)
+                            {
+                                auxVm.ProveedorElegido = tmpProv;
+                                Session["CrearEventoVM"] = auxVm;
+                            }
+                        }
+                    }
+                }
+                
+                return View(auxVm);
             }
-            return View(auxVm);
+        }
+        [HttpPost]
+        public ActionResult CargarServiciosAEvento(CrearEventoViewModel vm = null)
+        {
+            if (!this.esOrganizador())
+            {
+                return RedirectToAction("Logout", "Home", new { mensaje = @"Usted no tiene los permisos necesarios 
+                                                            para utilizar el recurso.
+                                                            Por favor inicie sesión con las credenciales adecuadas" });
+            }
+            else
+            {
+                return View();
+            }
         }
         public ActionResult EventosEntreFechas(DateTime? fechaInicial =null,DateTime? fechaFinal=null)
         {
