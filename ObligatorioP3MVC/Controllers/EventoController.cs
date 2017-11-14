@@ -165,6 +165,7 @@ namespace ObligatorioP3MVC.Controllers
                     {
                         using (GestionEventosContext db = new GestionEventosContext())
                         {
+                            //ACA HAY UN BUG
                             List<Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
                             List<Proveedor> listaProveedores = db.Proveedores.Include("Calificaciones").ToList();
                             List<Proveedor> listaProvAMostrar = new List<Proveedor>();
@@ -258,7 +259,7 @@ namespace ObligatorioP3MVC.Controllers
             }
         }
         [HttpPost]
-        public ActionResult CargarServiciosAEvento(CrearEventoViewModel vm = null)
+        public ActionResult CargarServiciosAEvento()
         {
             if (!this.esOrganizador())
             {
@@ -268,7 +269,55 @@ namespace ObligatorioP3MVC.Controllers
             }
             else
             {
-                return View();
+                CrearEventoViewModel auxVm = (CrearEventoViewModel)Session["CrearEventoVM"];
+
+                using (GestionEventosContext db = new GestionEventosContext())
+                {
+                    Organizador org = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
+                    List<ServicioContratado> ContratadosParaElEvento = new List<ServicioContratado>();
+                    if (auxVm.Evento.ServiciosContratados != null && auxVm.Evento.ServiciosContratados.Count > 0)
+                    {
+                        foreach (ServicioContratado tmpServCont in auxVm.Evento.ServiciosContratados)
+                        {
+                            Servicio auxSer = db.Servicios.Find(tmpServCont.Rut, tmpServCont.NombreServicio);
+                            ServicioContratado nuevoContratado = new ServicioContratado()
+                            {
+                                Fecha = auxVm.Fecha,
+                                Rut = tmpServCont.Rut,
+                                NombreServicio = tmpServCont.NombreServicio,
+                                NombreEvento = auxVm.Evento.Nombre,
+                                Servicio = auxSer,
+                                yaCalificado = false
+                            };
+                            ContratadosParaElEvento.Add(nuevoContratado);
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("Error", new { mensaje = "Debe seleccionar al menos un Servicio para poder dar de alta un Evento." });
+                    }
+                    TipoEvento tipoEventoElegido = db.TipoEventos.Find(auxVm.IdTipoEvento);
+                    Evento nuevoEvento = new Evento()
+                    {
+                        Nombre = auxVm.Evento.Nombre,
+                        Fecha = auxVm.Fecha,
+                        Direccion = auxVm.Evento.Direccion,
+                        Organizador = org,
+                        TipoEvento = tipoEventoElegido,
+                        Realizado = false,
+                        ServiciosContratados = ContratadosParaElEvento
+                    };
+                    db.Eventos.Add(nuevoEvento);
+                    try
+                    {
+                        db.SaveChanges();
+                        return RedirectToAction("Exito", new { mensaje = "Su evento fue creado exitosamente!" });
+                    }
+                    catch
+                    {
+                        return RedirectToAction("Error", new { mensaje = "Hubo un problema al agregar el registro en la Base de Datos" });
+                    }
+                }
             }
         }
         public ActionResult EventosEntreFechas(DateTime? fechaInicial =null,DateTime? fechaFinal=null)
