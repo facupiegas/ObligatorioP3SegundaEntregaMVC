@@ -166,6 +166,15 @@ namespace ObligatorioP3MVC.Controllers
                         using (GestionEventosContext db = new GestionEventosContext())
                         {
                             //ACA HAY UN BUG
+                            
+                            //bool has = list.Any(cus => cus.FirstName == "John");
+                            /////////
+
+                            //Customer customer = list.FirstOrDefault(cus => cus.FirstName == "John");
+                            //if (customer != null)
+                            //{
+                            // Use customer
+                            //}
                             List<Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
                             List<Proveedor> listaProveedores = db.Proveedores.Include("Calificaciones").ToList();
                             List<Proveedor> listaProvAMostrar = new List<Proveedor>();
