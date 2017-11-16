@@ -165,12 +165,12 @@ namespace ObligatorioP3MVC.Controllers
                     {
                         using (GestionEventosContext db = new GestionEventosContext())
                         {
-                            //ACA HAY UN BUG
-                            List<Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
+                            
+                            List <Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
                             List<Proveedor> listaProveedores = db.Proveedores.Include("Calificaciones").ToList();
                             List<Proveedor> listaProvAMostrar = new List<Proveedor>();
                             foreach (Proveedor auxProveedor in listaProveedores)
-                            {
+                            {                                                      
                                 auxProveedor.ServiciosOfrecidos.Clear();//limpio la lista de servicios del proveedor para no mostrar servicios no adecuados
                                 bool aMostrar = false;
                                 foreach (Servicio auxServicio in listaServicios)
@@ -186,7 +186,8 @@ namespace ObligatorioP3MVC.Controllers
                                     listaProvAMostrar.Add(auxProveedor);
                                 }
                             }
-                            auxVm.Proveedores = listaProvAMostrar;
+                            auxVm.Proveedores = listaProvAMostrar.OrderByDescending(p=>p.Vip)
+                                .ThenByDescending(p=>p.NomFantasia).ToList();
                             auxVm.ServiciosProveedores = listaServicios;
                             Session["CrearEventoVM"] = auxVm;
                         }
@@ -211,32 +212,43 @@ namespace ObligatorioP3MVC.Controllers
                 CrearEventoViewModel auxVm = (CrearEventoViewModel)Session["CrearEventoVM"];
                 if (nombreServicio != "")
                 {
-                    using (GestionEventosContext db = new GestionEventosContext())
+                    if (auxVm.Evento.ServiciosContratados != null)
                     {
-                        Servicio tmpServicio = db.Servicios.Find(rut, nombreServicio);
-                        if (tmpServicio != null)
+                        bool mostrarError = auxVm.Evento.ServiciosContratados.Any(p=>p.NombreServicio== nombreServicio && p.Rut == rut);
+                        if (mostrarError)
                         {
-                            ServicioContratado tmpServicioContratado = new ServicioContratado()
-                            {
-                                Fecha = auxVm.Fecha,
-                                Rut = rut,
-                                NombreServicio = nombreServicio,
-                                NombreEvento = auxVm.Evento.Nombre,
-                                yaCalificado = false,
-                                Servicio = tmpServicio
-
-                            };
-                            auxVm.Evento.ServiciosContratados.Add(tmpServicioContratado);
-                            foreach (Proveedor auxProv in auxVm.Proveedores)
-                            {
-                                if(auxProv.Rut == rut)
-                                {
-                                    auxProv.ServiciosOfrecidos.RemoveAll(x => x.NombreServicio == nombreServicio);
-                                }
-                            }
-                            Session["CrearEventoVM"] = auxVm;
+                            ModelState.AddModelError("", "El servicio seleccionado ya existe en la lista de servicios contratados del evento");
                         }
-                    }
+                    }                    
+                    if (ModelState.IsValid)
+                    {
+                        using (GestionEventosContext db = new GestionEventosContext())
+                        {
+                            Servicio tmpServicio = db.Servicios.Find(rut, nombreServicio);
+                            if (tmpServicio != null)
+                            {
+                                ServicioContratado tmpServicioContratado = new ServicioContratado()
+                                {
+                                    Fecha = auxVm.Fecha,
+                                    Rut = rut,
+                                    NombreServicio = nombreServicio,
+                                    NombreEvento = auxVm.Evento.Nombre,
+                                    yaCalificado = false,
+                                    Servicio = tmpServicio
+
+                                };
+                                auxVm.Evento.ServiciosContratados.Add(tmpServicioContratado);
+                                foreach (Proveedor auxProv in auxVm.Proveedores)
+                                {
+                                    if (auxProv.Rut == rut)
+                                    {
+                                        auxProv.ServiciosOfrecidos.RemoveAll(x => x.NombreServicio == nombreServicio);
+                                    }
+                                }
+                                Session["CrearEventoVM"] = auxVm;
+                            }
+                        }
+                    }//
                     
                 }
                 else
@@ -536,6 +548,13 @@ namespace ObligatorioP3MVC.Controllers
                 aux.CalificacionProveedor.Calificacion = vm.CalificacionProveedor.Calificacion;
                 aux.CalificacionProveedor.Comentario = vm.CalificacionProveedor.Comentario;
                 vm = aux;
+
+                //VALIDACION DESACTIVADA PARA PODER TESTEAR CORRECTAMENTE LA APLICACION
+                //Valido que la fecha de contratacion del servicio a calificar no sea mayor a la actual
+                //if (vm.ServicioContratado.Fecha > DateTime.Now)
+                //{
+                //    ModelState.AddModelError("","Este evento aun no ha sido realizado(fecha de evento mayor a la actual)");
+                //}
                 if (ModelState.IsValid)
                 {
                     using (GestionEventosContext db = new GestionEventosContext())
@@ -576,7 +595,10 @@ namespace ObligatorioP3MVC.Controllers
                 else
                 {
                     accion = "Error";
-                    parametroDeAccion = new { mensaje = "Por favor verifique los datos ingresados e intentelo nuevamente." };
+                    string mensaje = "Por favor verifique los datos ingresados e intentelo nuevamente.";
+                    //VALIDACION DESACTIVADA PARA PODER TESTEAR CORRECTAMENTE LA APLICACION
+                    //if (!ModelState.IsValid) mensaje = "Este evento aun no ha sido realizado(fecha de evento mayor a la actual)";
+                    parametroDeAccion = new { mensaje = mensaje };
                 }
                 //segun el resultado de las operaciones puede variar a que accion se redirecciona
                 return RedirectToAction(accion, parametroDeAccion);
