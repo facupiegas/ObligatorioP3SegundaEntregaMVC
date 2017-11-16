@@ -167,7 +167,6 @@ namespace ObligatorioP3MVC.Controllers
                         {
                             
                             List <Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
-                            List<Servicio> listaServicios = db.Servicios.Where(p => p.TipoServicio.NombreTipoServicio == auxVm.IdTipoServicio).ToList();
                             List<Proveedor> listaProveedores = db.Proveedores.Include("Calificaciones").ToList();
                             List<Proveedor> listaProvAMostrar = new List<Proveedor>();
                             foreach (Proveedor auxProveedor in listaProveedores)
