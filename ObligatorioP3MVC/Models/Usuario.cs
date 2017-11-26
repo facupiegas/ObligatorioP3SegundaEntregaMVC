@@ -16,6 +16,8 @@ namespace ObligatorioP3MVC.Models
         public enum EnumRol { Administrador, Proveedor, Organizador }
         [Key]
         public string Nombre { set; get; }
+        [Display(Name ="Password")]
+        [Required(ErrorMessage ="Debe ingresar un Password")]
         public string Pass { set; get; }
         public EnumRol Rol { set; get; }
         public string Sal { get; set; }

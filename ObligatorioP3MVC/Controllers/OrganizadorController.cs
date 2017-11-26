@@ -29,6 +29,13 @@ namespace ObligatorioP3MVC.Controllers
             //Defino variables auxiliares para el retorno
             var parametroDeAccion = (Object)null;
             string accion = string.Empty;
+            if (org.Telefono != null)
+            {
+                if (!stringEsSoloNumeros(org.Telefono))
+                {
+                    ModelState.AddModelError("", "Debe ingresar un telefono valido");
+                }
+            }
             if (ModelState.IsValid)
             {
                 using (GestionEventosContext db = new GestionEventosContext())
@@ -85,6 +92,8 @@ namespace ObligatorioP3MVC.Controllers
                 using (GestionEventosContext db = new GestionEventosContext())
                 {
                     org = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
+                    db.Entry(org).Reference(p => p.Usuario).Load();
+                    TempData["Organizador"] = org;
                 }
                 return View(org);
             }
@@ -100,18 +109,37 @@ namespace ObligatorioP3MVC.Controllers
             }
             else
             {
+                
                 //Defino variales auxiliares para el retorno
                 var parametroDeAccion = (Object)null;
                 string accion = string.Empty;
                 if (org != null)
                 {
+                    string nuevoTelefono = org.Telefono;
+                    org = (Organizador)TempData["Organizador"];
+
+                    if (nuevoTelefono == null || nuevoTelefono == "")
+                    {
+                        
+                        TempData["Organizador"] = org;
+                        return View(org);
+                    }
+                    else {
+                        if (!stringEsSoloNumeros(nuevoTelefono))
+                        {
+                            ModelState.AddModelError("", "Por favor ingrese un telefono valido");
+                            TempData["Organizador"] = org;
+                            return View(org);
+                        }
+                    }
+                    
                     using (GestionEventosContext db = new GestionEventosContext())
                     {
                         Organizador auxOrg = db.Organizadores.Find(Session["OrganizadorLogueado"].ToString());
                         if (auxOrg != null)
                         {
                             //asigno el nuevo telefono al Organizador
-                            auxOrg.Telefono = org.Telefono;
+                            auxOrg.Telefono = nuevoTelefono;
                             db.SaveChanges();
                             accion = "Datos";
                             TempData["Organizador"] = auxOrg;
@@ -165,6 +193,18 @@ namespace ObligatorioP3MVC.Controllers
         public bool esOrganizador()
         {
             return Session["TipoDeUsuario"] != null && Session["TipoDeUsuario"].ToString() == "Organizador" ? true : false;
+        }
+
+        public bool stringEsSoloNumeros(string unString) //metodo que valida que un string ingresado solo contenga numeros
+        {
+            foreach (char c in unString)
+            {
+                if (c < '0' || c > '9')
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

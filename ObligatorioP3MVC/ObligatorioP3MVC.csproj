@@ -134,6 +134,23 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711111811534_InitialCreate.cs" />
+    <Compile Include="Migrations\201711111811534_InitialCreate.Designer.cs">
+      <DependentUpon>201711111811534_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711260439342_required_telefono_organizador.cs" />
+    <Compile Include="Migrations\201711260439342_required_telefono_organizador.Designer.cs">
+      <DependentUpon>201711260439342_required_telefono_organizador.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711260533228_required_password_usuario.cs" />
+    <Compile Include="Migrations\201711260533228_required_password_usuario.Designer.cs">
+      <DependentUpon>201711260533228_required_password_usuario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711260534555_displayname_usuario.cs" />
+    <Compile Include="Migrations\201711260534555_displayname_usuario.Designer.cs">
+      <DependentUpon>201711260534555_displayname_usuario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CalificacionProveedor.cs" />
     <Compile Include="Models\Evento.cs" />
     <Compile Include="Models\GestionEventosContext.cs" />
@@ -209,6 +226,20 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201711111811534_InitialCreate.resx">
+      <DependentUpon>201711111811534_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711260439342_required_telefono_organizador.resx">
+      <DependentUpon>201711260439342_required_telefono_organizador.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711260533228_required_password_usuario.resx">
+      <DependentUpon>201711260533228_required_password_usuario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711260534555_displayname_usuario.resx">
+      <DependentUpon>201711260534555_displayname_usuario.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
