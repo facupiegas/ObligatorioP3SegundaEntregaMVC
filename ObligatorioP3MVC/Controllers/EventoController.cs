@@ -490,8 +490,7 @@ namespace ObligatorioP3MVC.Controllers
                 {
                     string org = Session["OrganizadorLogueado"].ToString();
                     //cargo los eventos realizados asociados al Organizador autenticado
-                    vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Realizado).Where(p => p.Organizador.NombreOrganizador == org ).ToList();
-                    //vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Fecha<DateTime.Now).Where(p => p.Organizador.NombreOrganizador == org).ToList();
+                    vm.Eventos = db.Eventos.Include("Organizador").Include("TipoEvento").Where(p => p.Fecha < DateTime.Now).Where(p => p.Realizado).Where(p => p.Organizador.NombreOrganizador == org ).ToList();
                     if (nombreEvento != "")
                     {//cuando un evento es seleccionado en la vista se pasa el nombre del evento por parametro para cargar sus ServicioContratado
                         ViewBag.NombreEvento = nombreEvento;
