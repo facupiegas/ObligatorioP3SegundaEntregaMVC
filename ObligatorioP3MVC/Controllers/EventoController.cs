@@ -39,6 +39,7 @@ namespace ObligatorioP3MVC.Controllers
                 {
                     vm = new CrearEventoViewModel(db.TipoEventos.ToList());
                 }
+                TempData["Evento"] = vm;
                 return View(vm);
             }
         }
@@ -57,6 +58,10 @@ namespace ObligatorioP3MVC.Controllers
                 if (vm.Fecha < DateTime.Now)
                 {
                     ModelState.AddModelError("", "La fecha debe ser mayor a la actual.");
+                }
+                if (vm.Evento.Nombre == null || vm.Evento.Nombre =="")
+                {
+                    ModelState.AddModelError("", "Debe ingresar un Nombre para el evento.");
                 }
                 if (ModelState.IsValid)
                 {
@@ -86,6 +91,11 @@ namespace ObligatorioP3MVC.Controllers
                             }
                         }
                     }
+                }
+                else
+                {
+                    vm = (CrearEventoViewModel)TempData["Evento"];
+                    TempData["Evento"] = vm;
                 }
                 return View(vm);
             }
