@@ -18,6 +18,7 @@ namespace ObligatorioP3MVC.Models
         public string NombreOrganizador { get; set; }
         [Required(ErrorMessage = "Debe ingresar un Email")]
         public string Email { get; set; }
+        [Required(ErrorMessage = "Debe ingresar un Telefono")]
         public string Telefono { get; set; }
         public virtual Usuario Usuario { get; set; }
         #endregion
