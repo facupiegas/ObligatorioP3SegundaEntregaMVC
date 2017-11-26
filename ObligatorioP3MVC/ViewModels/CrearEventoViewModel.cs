@@ -14,6 +14,7 @@ namespace ObligatorioP3MVC.ViewModels
     public class CrearEventoViewModel
     {
         public Evento Evento { get; set; }
+        [Required(ErrorMessage ="Debe ingresar una fecha")]
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Fecha { get; set; }
