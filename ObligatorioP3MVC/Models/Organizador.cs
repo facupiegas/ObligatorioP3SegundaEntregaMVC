@@ -17,6 +17,7 @@ namespace ObligatorioP3MVC.Models
         [Required(ErrorMessage ="Debe ingresar un Nombre")]
         public string NombreOrganizador { get; set; }
         [Required(ErrorMessage = "Debe ingresar un Email")]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [Required(ErrorMessage = "Debe ingresar un Telefono")]
         public string Telefono { get; set; }

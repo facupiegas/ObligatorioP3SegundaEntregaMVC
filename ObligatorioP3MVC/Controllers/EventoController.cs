@@ -582,16 +582,43 @@ namespace ObligatorioP3MVC.Controllers
                             ServicioContratado auxServContratado = db.ServicioContratados.Find(vm.ServicioContratado.Fecha, tmpProv.Rut, vm.ServicioContratado.NombreServicio, vm.CalificacionProveedor.NombreEvento);
                             //indico que ya fue calificado para no tomarlo en cuenta en futuras calificaciones
                             auxServContratado.yaCalificado = true;
-                            try
+                            //Compruebo que el proveedor no haya sido calificado previamente para el evento
+                            var proveedorYaCalificado = db.ServicioContratados.Where(p => p.Rut == tmpProv.Rut).Where(p => p.NombreEvento == vm.CalificacionProveedor.NombreEvento).Where(p => p.yaCalificado).FirstOrDefault();
+                            if (proveedorYaCalificado == null)
                             {
-                                db.SaveChanges();
-                                accion = "Exito";
-                                parametroDeAccion = new { mensaje = "Su comentario fue ingresado con exito! Muchas gracias" };
+                                try
+                                {
+                                    db.SaveChanges();
+                                    accion = "Exito";
+                                    parametroDeAccion = new { mensaje = "Su comentario fue ingresado con exito! Muchas gracias" };
+                                }
+                                catch
+                                {
+                                    accion = "Error";
+                                    parametroDeAccion = new { mensaje = "Su comentario no pudo ser ingresado. Por favor verifique los datos ingresados e intentelo nuevamente." };
+                                }
                             }
-                            catch
+                            else
                             {
-                                accion = "Error";
-                                parametroDeAccion = new { mensaje = "Su comentario no pudo ser ingresado. Por favor verifique los datos ingresados e intentelo nuevamente." };
+                                db.Dispose();
+                                using (GestionEventosContext dbNuevo = new GestionEventosContext())
+                                {
+                                    ServicioContratado auxServContratadoTmp = dbNuevo.ServicioContratados.Find(vm.ServicioContratado.Fecha, tmpProv.Rut, vm.ServicioContratado.NombreServicio, vm.CalificacionProveedor.NombreEvento);
+                                    //indico que ya fue calificado para no tomarlo en cuenta en futuras calificaciones
+                                    auxServContratadoTmp.yaCalificado = true;
+                                    try
+                                    {
+                                        dbNuevo.SaveChanges();
+                                        accion = "Exito";
+                                        parametroDeAccion = new { mensaje = "Su calificacion no fue ingresada debido a que el Proveedor seleccionado fue previamente calificado. Muchas gracias!" };
+                                    }
+                                    catch
+                                    {
+                                        accion = "Error";
+                                        parametroDeAccion = new { mensaje = "Su comentario no pudo ser ingresado. Por favor verifique los datos ingresados e intentelo nuevamente." };
+                                    }
+                                }
+
                             }
 
                         }

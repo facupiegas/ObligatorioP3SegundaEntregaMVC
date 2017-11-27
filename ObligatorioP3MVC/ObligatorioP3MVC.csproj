@@ -150,6 +150,10 @@
     <Compile Include="Migrations\201711260534555_displayname_usuario.Designer.cs">
       <DependentUpon>201711260534555_displayname_usuario.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711271510089_emailaddress_Organizador.cs" />
+    <Compile Include="Migrations\201711271510089_emailaddress_Organizador.Designer.cs">
+      <DependentUpon>201711271510089_emailaddress_Organizador.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CalificacionProveedor.cs" />
     <Compile Include="Models\Evento.cs" />
@@ -239,6 +243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711260534555_displayname_usuario.resx">
       <DependentUpon>201711260534555_displayname_usuario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711271510089_emailaddress_Organizador.resx">
+      <DependentUpon>201711271510089_emailaddress_Organizador.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
