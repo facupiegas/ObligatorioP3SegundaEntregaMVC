@@ -559,12 +559,12 @@ namespace ObligatorioP3MVC.Controllers
                 aux.CalificacionProveedor.Comentario = vm.CalificacionProveedor.Comentario;
                 vm = aux;
 
-                //VALIDACION DESACTIVADA PARA PODER TESTEAR CORRECTAMENTE LA APLICACION
+                
                 //Valido que la fecha de contratacion del servicio a calificar no sea mayor a la actual
-                //if (vm.ServicioContratado.Fecha > DateTime.Now)
-                //{
-                //    ModelState.AddModelError("","Este evento aun no ha sido realizado(fecha de evento mayor a la actual)");
-                //}
+                if (vm.ServicioContratado.Fecha > DateTime.Now)
+                {
+                    ModelState.AddModelError("", "Este evento aun no ha sido realizado(fecha de evento mayor a la actual)");
+                }
                 if (ModelState.IsValid)
                 {
                     using (GestionEventosContext db = new GestionEventosContext())
