@@ -31,14 +31,9 @@ namespace ObligatorioP3MVC.Models
         #endregion
 
         #region Metodos
-        public ServicioContratado(Proveedor unProveedor, List<Servicio> unaListaDeServicios)
-        {
-            //this.Proveedor = unProveedor;
-            //this.ListaServicios = unaListaDeServicios;
-        }
         public ServicioContratado()
         {
-            //this.ListaServicios = new List<Servicio>();
+            
         }
         #endregion
     }
